@@ -33,10 +33,7 @@ void c_main()
 	x86_init();
 	
 	/* init kernel threads */
-	for (i=0; i<64; i++)
-		kt[i].pid = -1;
-	kt[0].pid = 0;
-	strcpy(kt[0].fname, "init");
+	init_kthreads();
 
 	console_puts("init...finished\n\n");
 
