@@ -27,53 +27,18 @@
 #include "app/shell.h"
 #include "lib/lib.h"
 
-void TestA(void);
-void TestB(void);
-
 void c_main()
 {
 	int i;
 	x86_init();
-	console_puts("init...finished\n");
-
-	load_tr();
 	
-	//init_shell();
-	//while(1){
-		//keyboard_read();
-	//}
-	
+	/* init kernel threads */
 	for (i=0; i<64; i++)
 		kt[i].pid = -1;
 	kt[0].pid = 0;
 	strcpy(kt[0].fname, "init");
 
-	shell_main();	
+	console_puts("init...finished\n\n");
+
+	shell_main();
 }
-
-
-void TestA(void)
-{
-	int i=0;
-	while(1)
-	{
-		console_puts("A");
-		console_puts(itoa(i, 16));
-		console_puts(".");
-		timer_wait(10);
-		i++;
-	}
-}
-
-void TestB(void)
-{
-	int i=0;
-	while(1)
-	{
-		console_puts("B");
-		console_puts(itoa(i, 16));
-		console_puts(".");
-		timer_wait(10);
-	}
-}
-

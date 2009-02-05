@@ -12,7 +12,6 @@ KERN_OBJS = \
 	kernel/kernel.o \
 	kernel/console.o \
 	kernel/global.o \
-	kernel/start.o \
 	kernel/syscall.o \
 	kernel/syscall_table.o \
 	kernel/kthread.o
