@@ -18,7 +18,7 @@ void task_c()
 	int count = 0;
 	while (1) {
 		settextcolor(0xe,0x1);
-		screen_pos_puts("task_c:", 63, 0);
+		//screen_pos_puts("task_c:", 63, 0);
 		screen_pos_putch(star(count % 4), 70, 0);
 		settextcolor(0xf,0x0);
 		count++;
@@ -40,5 +40,5 @@ void task_c_remove()
 	asm("sti");
 	memset(StackC, 0, sizeof(StackC));
 	settextcolor(0xf,0x0);
-	screen_pos_puts("		", 63, 0);
+	screen_pos_puts("        ", 63, 0);
 }
