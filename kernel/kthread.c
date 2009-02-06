@@ -9,7 +9,6 @@ int kt_current = 0; //kernel main thread
 int kt_ready = 0;
 int* kt_current_sp = 0;
 struct kthread_t kt[NR_THREADS];
-char fname[20];
 
 /**
  * @brief kthreads initialzation
@@ -20,9 +19,9 @@ void init_kthreads()
 {
 	int i;
 	for (i=0; i<NR_THREADS; i++)
-		kt[i].pid = -1;
+		kt[i].tid = -1;
 
-	kt[0].pid = 0;
+	kt[0].tid = 0;
 	strcpy(kt[0].fname, "init");
 }
 
@@ -34,13 +33,13 @@ void init_kthreads()
  * @param func
  * @param prio
  *
- * @return PID
+ * @return thread ID
  */
 int kt_create(int* stack, char* name, void (*func)(void), int prio)
 {
 	kt_num++;
 
-	kt[kt_num].pid = kt_num;
+	kt[kt_num].tid = kt_num;
 	kt[kt_num].stack = stack;
 	kt[kt_num].func = func;
 	kt[kt_num].state = KT_INIT;
@@ -50,29 +49,20 @@ int kt_create(int* stack, char* name, void (*func)(void), int prio)
 	if(kt_ready == -1)
 		kt_ready = kt_num;
 
-	return kt[kt_num].pid;
+	return kt[kt_num].tid;
 }
 
-void kt_destroy(int fn)
+/**
+ * @brief Destroy a kernel thread
+ *
+ * @param tid kernel thread ID
+ */
+void kt_destroy(int tid)
 {
-	int i;
-	switch (fn)
-	{
-		case 1: strcpy(fname, "task_a"); break;
-		case 2: strcpy(fname, "task_b"); break;
-		case 3: strcpy(fname, "task_c"); break;
-	}
+	kt[tid].tid = -1;
+	kt[tid].stack = NULL;
+	kt[tid].func = NULL;
+	kt[tid].state = 0;
+	kt[tid].fname[0] = '\0';
 
-	for (i=0; i<=kt_num; i++)
-	{
-		if (!strcmp(kt[i].fname, fname))
-		{
-			kt[i].pid = -1;
-			kt[i].stack = NULL;
-			kt[i].func = NULL;
-			kt[i].state = 0;
-			kt[i].fname[0] = '\0';
-			break;
-		}
-	}
 }

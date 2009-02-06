@@ -4,7 +4,8 @@
 #include "kernel/types.h"
 
 
-int StackC[1024];
+static int StackC[1024];
+static int taskc_tid = -1;
 
 void c_delay()
 {
@@ -29,14 +30,14 @@ void task_c()
 void task_c_prepare()
 {
 	asm("cli");
-	kt_create(StackC+1024-1, "task_c", task_c, 3);
+	taskc_tid = kt_create(StackC+1024-1, "task_c", task_c, 3);
 	asm("sti");
 }
 
 void task_c_remove()
 {
 	asm("cli");
-	kt_destroy(3);
+	kt_destroy(taskc_tid);
 	asm("sti");
 	memset(StackC, 0, sizeof(StackC));
 	settextcolor(0xf,0x0);

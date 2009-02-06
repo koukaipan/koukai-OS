@@ -43,7 +43,16 @@ static struct Command commands[] = {
 };
 #define NCOMMANDS (sizeof(commands)/sizeof(commands[0]))
 
-
+static char *state_to_string[8] = {
+	[KT_INIT]		= "Init      ",
+	[KT_READY] 		= "Ready     ",
+	[KT_RUNNING] 		= "Running   ",
+	[KT_WAIT] 		= "Wait      ",
+	[KT_EVENT_WAIT] 	= "Event wait",
+	[KT_BLOCK] 		= "Block     ",
+	[KT_DELAY] 		= "Delay     ",
+	[KT_TERMINATE] 		= "Terminate ",
+};
 
 /***** Implementations of basic kernel monitor commands *****/
 
@@ -130,50 +139,20 @@ void shell_tasks(int argc, char **argv)
     console_puts("PID\tTASK\tSTATE\n");
     for (i=0; i<=kt_num; i++)
     {
-        if (kt[i].pid < 0) continue;
+        if (kt[i].tid < 0) continue;
         console_puts("  ");
         settextcolor(0xf,0x0);
-        console_puts(itoa(kt[i].pid,10));
-        console_puts("\t");
+        console_puts(itoa(kt[i].tid,10));
+        console_putch('\t');
         settextcolor(0xe,0x0);
         console_puts(kt[i].fname);
-        console_puts("\t");
+        console_putch('\t');
         settextcolor(0xd,0x0);
-        switch (kt[i].state)
-        {
-            case 1: console_puts("INIT\n"); break;
-            case 2: console_puts("READY\n"); break;
-            case 3: console_puts("RUNNING\n"); break;
-            case 4: console_puts("WAIT\n"); break;
-            default:	console_puts("UNKNOWN\n"); break;
-        }
+        console_puts(state_to_string[kt[i].state]);
+        console_putch('\n');
     }
     settextcolor(0xf,0x0);
 }
-
-//int strcmp2(char* str1, char* str2)
-//{
-	//int i = 0;
-	//console_puts(str1);
-	//console_puts(str2); 
-	//while(str1[i]!=0 && str2[i]!=0 && str1[i]==str2[i])
-	//{
-		//console_puts(itoa(i, 10));
-		//console_puts(" a:");
-		//screen_putch(str1[i]);
-		//console_puts(" b:");
-		//console_putch(str2[i]);
-		//console_puts("\n");
-		//++i;
-	//}
-	//console_puts(itoa(i, 10));
-		//console_puts(" a:");
-		//console_puts(itoa(str1[i],10));
-		//console_puts(" b:");
-		//console_puts(itoa(str2[i],10));
-	//console_puts("\n");
-	//return str1[i]-str2[i];
-//}
 
 static void runcmd(char *buf)
 {

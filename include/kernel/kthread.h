@@ -22,7 +22,7 @@ typedef enum {
 
 struct kthread_t
 {
-	int pid;
+	int tid;
 	KTHREAD_STATE state;
 	int *stack;
 	int prio;

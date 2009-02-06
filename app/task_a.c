@@ -2,11 +2,11 @@
 #include "kernel/kthread.h"
 #include "kernel/console.h"
 #include "kernel/types.h"
-#include "lib/itoa.h"
 #include "x86/timer.h"
 
 
-int StackA[1024];
+static int StackA[1024];
+static int taska_tid = -1;
 
 void task_a()
 {
@@ -24,14 +24,14 @@ void task_a()
 void task_a_prepare()
 {
 	asm("cli");
-	kt_create(StackA+1024-1, "task_a", task_a, 3);
+	taska_tid = kt_create(StackA+1024-1, "task_a", task_a, 3);
 	asm("sti");
 }
 
 void task_a_remove()
 {
 	asm("cli");
-	kt_destroy(1);
+	kt_destroy(taska_tid);
 	asm("sti");
 	memset(StackA, 0, sizeof(StackA));
 	settextcolor(0xf,0x0);

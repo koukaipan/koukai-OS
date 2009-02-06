@@ -28,14 +28,14 @@ void run_kt()
 /**
  * @brief Round-Robin scheduler
  *
- *
+ * pick up a ready task to run
  */
 void RR()
 {
 	/* To find a valid kt */
 	do {
 		kt_ready++;
-	} while (kt[kt_ready].pid < 0);
+	} while (kt[kt_ready].tid < 0);
 	if(kt_ready > kt_num)
 		kt_ready = 0;
 	if(kt_num <= 0)
@@ -44,7 +44,7 @@ void RR()
 
 
 extern void os_ctx_sw();
-extern int _g_timer_ticks;
+
 void reschedule()
 {
 	kt[kt_current].state = KT_WAIT;

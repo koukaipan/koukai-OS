@@ -5,7 +5,8 @@
 #include "x86/timer.h"
 
 
-int StackB[1024];
+static int StackB[1024];
+static int taskb_tid = -1;
 
 void task_b()
 {
@@ -23,14 +24,14 @@ void task_b()
 void task_b_prepare()
 {
 	asm("cli");
-	kt_create(StackB+1024-1, "task_b", task_b, 3);
+	taskb_tid = kt_create(StackB+1024-1, "task_b", task_b, 3);
 	asm("sti");
 }
 
 void task_b_remove()
 {
 	asm("cli");
-	kt_destroy(2);
+	kt_destroy(taskb_tid);
 	asm("sti");
 	memset(StackB, 0, sizeof(StackB));
 	settextcolor(0xf,0x0);
