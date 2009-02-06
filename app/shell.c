@@ -67,11 +67,10 @@ void shell_cmds(int argc, char **argv)
 	settextcolor(0xf,0x0);
 }
 
-extern int _g_timer_ticks;
 void shell_ticks(int argc, char **argv)
 {
 	console_puts(" ticks = ");
-	console_puts(itoa(_g_timer_ticks,10));
+	console_puts(itoa(get_ticks(),10));
 	console_puts("\n");
 }
 

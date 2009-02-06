@@ -24,16 +24,16 @@
 
 /* This will keep track of how many ticks that the system
 *  has been running for */
-int _g_timer_ticks = 0;
-int _display_ticks = 0;
-int sec, min, hour;
+static int _g_timer_ticks = 0;
 
-/* Handles the timer. In this case, it's very simple: We
-*  increment the 'timer_ticks' variable every time the
-*  timer fires. By default, the timer fires 18.222 times
-*  per second. Why 18.222Hz? Some engineer at IBM must've
-*  been smoking something funky */
-
+/**
+ * @brief timer interrupt handler
+ * Handles the timer. In this case, it's very simple: We
+ * increment the 'timer_ticks' variable every time the
+ * timer fires. By default, the timer fires 18.222 times
+ * per second. Why 18.222Hz? Some engineer at IBM must've
+ * been smoking something funky
+ */
 void timer_handler(struct regs *r)
 {
     /* Increment our 'tick count' */
@@ -59,7 +59,6 @@ void os_timer_ticks()
 {
     /* Increment our 'tick count' */
     _g_timer_ticks++;
-    _display_ticks++;
 
     /* In either case, we need to send an EOI to the master
     *  interrupt controller too */
