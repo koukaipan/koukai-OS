@@ -11,12 +11,11 @@ APP_OBJS = \
 KERN_OBJS = \
 	kernel/kernel.o \
 	kernel/console.o \
-	kernel/global.o \
-	kernel/syscall.o \
 	kernel/syscall_table.o \
 	kernel/kthread.o
 
 X86_OBJS = \
+	arch/x86/global.o \
 	arch/x86/idt.o \
 	arch/x86/gdt.o \
 	arch/x86/isrs.o \
@@ -29,7 +28,8 @@ X86_OBJS = \
 	arch/x86/pci.o \
 	arch/x86/apic.o \
 	arch/x86/keyboard.o \
-	arch/x86/schedule.o
+	arch/x86/schedule.o \
+	arch/x86/syscall.o
 	
 LIB_OBJS = \
 	lib/string.o
