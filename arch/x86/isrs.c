@@ -56,15 +56,24 @@ extern void isr31();
 
 extern void sys_call();
 
-/* This is a very repetitive function... it's not hard, it's
-*  just annoying. As you can see, we set the first 32 entries
-*  in the IDT to the first 32 ISRs. We can't use a for loop
-*  for this, because there is no way to get the function names
-*  that correspond to that given entry. We set the access
-*  flags to 0x8E. This means that the entry is present, is
-*  running in ring 0 (kernel level), and has the lower 5 bits
-*  set to the required '14', which is represented by 'E' in
-*  hex. */
+/*
+ * order of Exception(n) handling
+ * Exception(n) happened -> jump to isr(n)() (asm) ->
+ * fault_handler() -> infinite loop
+ */
+
+/**
+ * @brief set IDT gate 0~31 and syscall
+ *
+ * This is a very repetitive function... it's not hard, it's
+ * just annoying. As you can see, we set the first 32 entries
+ * in the IDT to the first 32 ISRs. We can't use a for loop
+ * for this, because there is no way to get the function names
+ * that correspond to that given entry. We set the access
+ * flags to 0x8E. This means that the entry is present, is
+ * running in ring 0 (kernel level), and has the lower 5 bits
+ * set to the required '14', which is represented by 'E' in hex.
+ */
 void isrs_install()
 {
     idt_set_gate(0, (unsigned)isr0, 0x08, 0x8E);
@@ -117,23 +126,26 @@ unsigned char *exception_messages[] =
     "Non Maskable Interrupt",
     "Breakpoint",
     "Into Detected Overflow",
+
     "Out of Bounds",
     "Invalid Opcode",
     "No Coprocessor",
-
     "Double Fault",
     "Coprocessor Segment Overrun",
+
     "Bad TSS",
     "Segment Not Present",
     "Stack Fault",
     "General Protection Fault",
     "Page Fault",
-    "Unknown Interrupt",
 
+    "Unknown Interrupt",
     "Coprocessor Fault",
     "Alignment Check",
     "Machine Check",
     "Reserved",
+
+    "Reserved",
     "Reserved",
     "Reserved",
     "Reserved",
@@ -144,17 +156,21 @@ unsigned char *exception_messages[] =
     "Reserved",
     "Reserved",
     "Reserved",
-    "Reserved",
+
     "Reserved",
     "Reserved"
 };
 
-/* All of our Exception handling Interrupt Service Routines will
-*  point to this function. This will tell us what exception has
-*  happened! Right now, we simply halt the system by hitting an
-*  endless loop. All ISRs disable interrupts while they are being
-*  serviced as a 'locking' mechanism to prevent an IRQ from
-*  happening and messing up kernel data structures */
+/**
+ * @brief exception handler ISR: just show msg, enter infinite loop
+ *
+ * All of our Exception handling Interrupt Service Routines will
+ * point to this function. This will tell us what exception has
+ * happened! Right now, we simply halt the system by hitting an
+ * endless loop. All ISRs disable interrupts while they are being
+ * serviced as a 'locking' mechanism to prevent an IRQ from
+ * happening and messing up kernel data structures
+ */
 void fault_handler(struct regs *r)
 {
     if (r->int_no < 32)
