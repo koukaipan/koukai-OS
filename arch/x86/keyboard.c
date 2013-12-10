@@ -36,7 +36,6 @@ void keyboard_handler(struct regs *r)
 	}
 }
 
-extern void console_puts(char*);
 void init_keyboard()
 {
 	kb_in.count = 0;
@@ -44,8 +43,6 @@ void init_keyboard()
 
 	/* 設定irq handler */
 	irq_install_handler(1, keyboard_handler);
-	
-	console_puts("keyboard handler installed.\n");
 }
 
 int in_process(unsigned int key)
