@@ -32,9 +32,7 @@ X86_OBJS = \
 	arch/x86/schedule.o
 	
 LIB_OBJS = \
-	lib/string.o \
-	lib/itoa.o \
-	lib/mem.o
+	lib/string.o
 
 ALL_OBJS =  $(KERN_OBJS) $(LIB_OBJS) $(X86_OBJS) $(APP_OBJS)
 

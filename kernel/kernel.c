@@ -25,7 +25,6 @@
 #include "kernel/kthread.h"
 #include "kernel/global.h"
 #include "app/shell.h"
-#include "lib/lib.h"
 
 void c_main()
 {
