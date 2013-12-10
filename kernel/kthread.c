@@ -2,8 +2,6 @@
 #include "kernel/kthread.h"
 #include "lib/string.h"
 
-#define NULL 0
-
 int kt_num = 0;
 int kt_current = 0; //kernel main thread
 int kt_ready = 0;

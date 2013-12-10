@@ -1,12 +1,9 @@
-
 #include "kernel/console.h"
 #include "kernel/types.h"
 #include "kernel/kthread.h"
 #include "lib/string.h"
 #include "lib/itoa.h"
 #include "x86/screen.h"
-
-#define NULL 0
 
 void task_a_prepare();
 void task_b_prepare();
