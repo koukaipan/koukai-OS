@@ -26,6 +26,10 @@
 #include "kernel/global.h"
 #include "app/shell.h"
 
+static int stack[1024];
+static int init_tid = -1;
+void init_thread();
+
 void c_main()
 {
 	int i;
@@ -34,7 +38,13 @@ void c_main()
 	/* init kernel threads */
 	init_kthreads();
 
-	console_puts("init...finished\n\n");
+	kt[0].tid = 0;
+	strcpy(kt[0].fname, "init");
 
 	shell_main();
+}
+
+void init_thread()
+{
+	reschedule();
 }

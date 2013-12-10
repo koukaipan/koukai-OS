@@ -19,8 +19,6 @@ void init_kthreads()
 	for (i=0; i<NR_THREADS; i++)
 		kt[i].tid = -1;
 
-	kt[0].tid = 0;
-	strcpy(kt[0].fname, "init");
 }
 
 /**
