@@ -173,12 +173,8 @@ void screen_init(void)
 /* Uses the above routine to output a string... */
 void screen_puts(const char *text)
 {
-    int i;
-
-    for (i = 0; i < strlen(text); i++)
-    {
-        screen_putch(text[i]);
-    }
+	while(*text)
+		screen_putch(*text++);
 }
 
 /* move cursor and puts */
