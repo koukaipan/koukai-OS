@@ -1,6 +1,7 @@
 #include "kernel/console.h"
 #include "kernel/types.h"
 #include "kernel/kthread.h"
+#include "kernel/syscall_table.h"
 #include "lib/string.h"
 #include "lib/itoa.h"
 #include "x86/screen.h"
@@ -25,6 +26,7 @@ void shell_task_a(int argc, char **argv);
 void shell_task_b(int argc, char **argv);
 void shell_task_c(int argc, char **argv);
 void shell_cls(int argc, char **argv);
+void shell_stat(int argc, char **argv);
 
 static struct Command commands[] = {
 	{"cmds",	"Show all supported commands", shell_cmds},
@@ -32,7 +34,8 @@ static struct Command commands[] = {
 	{"lspci",	"List all PCI devices", shell_lspci},
 	{"date",	"Print the system date", shell_date},
 	{"ticks",	"Display kernel ticks", shell_ticks},
-	{"ps",	"Report all tasks", shell_tasks},
+	{"ps",		"Report all tasks", shell_tasks},
+	{"stat",	"Display koukai-OS statistics",	shell_stat},
 	{"taska",	"Attach/detach task a", shell_task_a},
 	{"taskb",	"Attach/detach task b", shell_task_b},
 	{"taskc",	"Attach/detach task c", shell_task_c},
@@ -55,7 +58,7 @@ static char *state_to_string[8] = {
 
 void shell_cls(int argc, char **argv)
 {
-	screen_clear();
+	console_clear();
 }
 void shell_cmds(int argc, char **argv)
 {
@@ -90,6 +93,7 @@ void shell_mem(int argc, char **argv)
 	//console_puts(itoa(mem_end,10));
 	console_puts("\n");
 }
+
 extern int lspci();
 void shell_lspci(int argc, char **argv)
 {
@@ -101,6 +105,7 @@ void shell_date(int argc, char **argv)
 {
 	//printDate();	
 }
+
 void shell_task_a(int argc, char **argv)
 {
     static int toggle_a = 0;
@@ -110,6 +115,7 @@ void shell_task_a(int argc, char **argv)
         task_a_remove();
     toggle_a = !toggle_a;
 }
+
 void shell_task_b(int argc, char **argv)
 {
     static int toggle_b = 0;
@@ -119,6 +125,7 @@ void shell_task_b(int argc, char **argv)
         task_b_remove();
     toggle_b = !toggle_b;
 }
+
 void shell_task_c(int argc, char **argv)
 {
     static int toggle_c = 0;
@@ -128,6 +135,20 @@ void shell_task_c(int argc, char **argv)
         task_c_remove();
     toggle_c = !toggle_c;
 }
+
+void shell_stat(int argc, char **argv)
+{
+	int total_thread_cnt=1;
+
+	console_puts("*********** koukai-OS statistics info **************\n");
+/*	console_puts("Total Thread Count : %x\n", total_thread_cnt);
+	console_puts("Total Context Switch Count : %x\n", total_csw_cnt); */
+	console_puts("Current Time Tick : ");
+	console_puts(itoa(sys_get_ticks(),10));
+	console_putch('\n');
+	console_puts("****************************************************\n");
+}
+
 void shell_tasks(int argc, char **argv)
 {
     int i;
@@ -154,9 +175,11 @@ void shell_tasks(int argc, char **argv)
 static void runcmd(char *buf)
 {
 	int i =0;
-    if (buf[0] == 0) return;
+	if (buf[0] == 0)
+		return;
+
 	for (i = 0; i < NCOMMANDS; i++) {
-		if (strcmp(buf, commands[i].name) == 0) {
+		if (strcmp(buf, commands[i].name) == 0)	{
 			commands[i].func(0,NULL);
 			return;
 		}
@@ -171,6 +194,10 @@ void shell_main()
 {
 	char shell_cmd[255];
 	
+	console_puts("############################################\n");
+	console_puts("#       Start koukai-OS....                #\n");
+	console_puts("############################################\n");
+
 	while (1) {
 		memset(shell_cmd, 0, 255);
 		settextcolor(0xc,0x0);
