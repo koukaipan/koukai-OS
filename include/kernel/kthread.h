@@ -36,8 +36,9 @@ void kt_destroy(int fn);
 
 extern int kt_num;
 extern int kt_current;
-extern int kt_ready;
 extern int* kt_current_sp;
 extern struct kthread_t kt[NR_THREADS];
+
+#define current (&kt[kt_current])
 
 #endif

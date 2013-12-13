@@ -4,7 +4,6 @@
 
 int kt_num = 0;
 int kt_current = 0; //kernel main thread
-int kt_ready = 0;
 int* kt_current_sp = 0;
 struct kthread_t kt[NR_THREADS];
 
@@ -41,9 +40,6 @@ int kt_create(int* stack, char* name, void (*func)(void), int prio)
 	kt[kt_num].state = KT_INIT;
 	kt[kt_num].prio = prio;
 	strcpy(kt[kt_num].fname, name);
-
-	if(kt_ready == -1)
-		kt_ready = kt_num;
 
 	return kt[kt_num].tid;
 }

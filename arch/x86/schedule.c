@@ -3,15 +3,20 @@
 #include "kernel/kthread.h"
 #include "kernel/console.h"
 
+int total_csw_cnt = 0;
+
+/**
+ * @brief load a method to run
+ *
+ * where the state of ready task is KT_INIT, kernel will call run_kt()
+ * to run the newly task, and it will *NOT* return.
+ *
+ */
 void run_kt()
 {
-	int *s= kt[kt_current].stack;
-	void (*func)(void) = kt[kt_current].func;
-	kt[kt_current].state = KT_RUNNING;
-
-	/* In either case, we need to send an EOI to the master
-	 *  interrupt controller too */
-	outportb(0x20, 0x20);
+	int *s= current->stack;
+	void (*func)(void) = current->func;
+	current->state = KT_RUNNING;
 
 	__asm__  __volatile__ (
 			"mov %0,%%esp\n\t"
@@ -27,19 +32,25 @@ void run_kt()
 
 /**
  * @brief Round-Robin scheduler
+ * @param current current thread number =/= tid
+ * @return thread number ready to run
  *
  * pick up a ready task to run
+ *
  */
-void RR()
+int RR(int curr)
 {
+	int ready = curr;
 	/* To find a valid kt */
 	do {
-		kt_ready++;
-	} while (kt[kt_ready].tid < 0);
-	if(kt_ready > kt_num)
-		kt_ready = 0;
+		ready++;
+	} while (kt[ready].tid < 0);
+	if(ready > kt_num)
+		ready = 0;
 	if(kt_num <= 0)
-		kt_ready = 0;
+		ready = 0;
+
+	return ready;
 }
 
 
@@ -47,11 +58,12 @@ extern void os_ctx_sw();
 
 void reschedule()
 {
-	kt[kt_current].state = KT_WAIT;
-	kt[kt_current].stack = kt_current_sp;
+	int kt_ready;
 
-	RR();
+	current->state = KT_WAIT;
+	current->stack = kt_current_sp;
 
+	kt_ready = RR(kt_current);
 
 	if(kt[kt_ready].state == KT_INIT){
 		//console_puts(" try run_kt\n");
@@ -66,15 +78,14 @@ void reschedule()
 		return;
 	}
 
-	kt[kt_current].state = KT_WAIT;
-	kt[kt_current].stack = kt_current_sp;
-
 	kt_current = kt_ready;
-	kt[kt_current].state = KT_RUNNING;
+	current->state = KT_RUNNING;
 	kt_current_sp = kt[kt_current].stack;
 
+	/* we are now in interrupt context */
 //	return;
+	total_csw_cnt++;
 	__asm__  __volatile__ (
-			"jmp os_ctx_sw\n\t"
-			);
+		"jmp os_ctx_sw\n\t"
+		);
 } 
