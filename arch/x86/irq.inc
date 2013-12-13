@@ -23,11 +23,10 @@ extern timer_handler2
 ; 32: IRQ0
 irq0:
     cli
-    ;mov ax, 0x18
+	;mov ax, 0x18
 	;mov gs, ax
 	;mov	ah, 0Ch				; 0000:黑底, 1100:紅字
 	;inc	byte [gs:((80*1 + 74)*2)]	; 屏幕第 10 行, 第 0 列。
-	mov	[APIC_EOI_ADDR], dword 0
 	jmp irq_timer_stub
 	;改成呼叫common_stub, 要記得先push 0,32
     push byte 0
@@ -177,6 +176,7 @@ irq_timer_stub:
     push fs
     push gs
 
+    ;the 2nd entry of GDT
     mov ax, 0x10
     mov ds, ax
     mov es, ax
@@ -185,7 +185,6 @@ irq_timer_stub:
 
     mov     eax,kt_current_sp
     mov     [eax],esp
-
 
     mov eax, os_timer_ticks
     call eax
@@ -216,14 +215,3 @@ os_ctx_sw:
     popad
 
     iret
-
-global	enable_int
-global	disable_int
-
-disable_int:
-	cli
-	ret
-	
-enable_int:
-	sti
-	ret

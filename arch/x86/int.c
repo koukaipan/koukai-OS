@@ -1,11 +1,12 @@
-global	enable_int
-global	disable_int
+#include "x86/int.h"
 
-disable_int:
-	cli
-	ret
+inline void disable_int()
+{
+	__asm__  __volatile__ ("cli");
+}
 	
-enable_int:
-	sti
-	ret
+inline void enable_int()
+{
+	__asm__  __volatile__ ("sti");
+}
 	

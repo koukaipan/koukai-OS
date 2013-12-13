@@ -25,6 +25,7 @@ X86_OBJS = \
 	arch/x86/screen.o \
 	arch/x86/io.o \
 	arch/x86/init.o \
+	arch/x86/int.o \
 	arch/x86/pci.o \
 	arch/x86/apic.o \
 	arch/x86/keyboard.o \
