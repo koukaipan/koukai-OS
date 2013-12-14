@@ -16,7 +16,9 @@
 
 /* Notes: No warranty expressed or implied. Use at own risk. */
 #include "kernel/types.h"
+#include "kernel/console.h"
 #include "x86/x86.h"
+#include "x86/idt.h"
 
 /* These are function prototypes for all of the exception
 *  handlers: The first 32 entries in the IDT are reserved
@@ -119,7 +121,7 @@ void isrs_install()
 *  corresponds to each and every exception. We get the correct
 *  message by accessing like:
 *  exception_message[interrupt_number] */
-unsigned char *exception_messages[] =
+char *exception_messages[] =
 {
     "Division By Zero",
     "Debug",

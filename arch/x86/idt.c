@@ -18,6 +18,7 @@
 /* Notes: No warranty expressed or implied. Use at own risk. */
 
 #include "kernel/types.h"
+#include "lib/string.h"
 
 /* Defines an IDT entry */
 struct idt_entry

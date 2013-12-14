@@ -31,6 +31,7 @@ struct kthread_t
 	void (*func) ( void );
 };
 
+void init_kthreads();
 int kt_create(int* stack, char* name, void (*func)(void), int prio);
 void kt_destroy(int fn);
 

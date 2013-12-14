@@ -22,17 +22,16 @@
 #include "x86/process.h"
 #include "x86/pci.h"
 #include "x86/timer.h"
+#include "x86/schedule.h"
 #include "kernel/kthread.h"
 #include "kernel/global.h"
 #include "app/shell.h"
+#include "lib/string.h"
 
-static int stack[1024];
-static int init_tid = -1;
-void init_thread();
+//static int stack[1024];
 
 void c_main()
 {
-	int i;
 	x86_init();
 	
 	/* init kernel threads */

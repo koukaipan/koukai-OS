@@ -18,8 +18,10 @@
 
 /* Notes: No warranty expressed or implied. Use at own risk. */
 #include "kernel/types.h"
+#include "x86/idt.h"
 #include "x86/irq.h"
 #include "x86/x86.h"
+#include "x86/io.h"
 
 /* These are own ISRs that point to our special IRQ handler
 *  instead of the regular 'fault_handler' function */

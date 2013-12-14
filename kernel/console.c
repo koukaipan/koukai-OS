@@ -18,6 +18,7 @@
 
 /* Notes: No warranty expressed or implied. Use at own risk. */
 #include "x86/screen.h"
+#include "x86/keyboard.h"
 #include "kernel/console.h"
 
 /* 將螢幕操作的實做放在screen裡面, 用console包起來 */

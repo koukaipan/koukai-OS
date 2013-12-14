@@ -22,6 +22,9 @@
 #include "x86/irq.h"
 #include "x86/isrs.h"
 #include "x86/apic.h"
+#include "x86/timer.h"
+#include "x86/keyboard.h"
+#include "kernel/console.h"
 
 void x86_init()
 {

@@ -21,10 +21,12 @@
 #include "kernel/types.h"
 #include "lib/itoa.h"
 #include "x86/x86.h"
+#include "x86/irq.h"
+#include "x86/io.h"
 
 /* This will keep track of how many ticks that the system
 *  has been running for */
-static int _g_timer_ticks = 0;
+static unsigned int _g_timer_ticks = 0;
 
 /**
  * @brief timer interrupt handler
@@ -50,7 +52,7 @@ void timer_handler(struct regs *r)
     //}
 }
 
-int get_tick()
+unsigned int __get_ticks()
 {
 	return _g_timer_ticks;
 }

@@ -1,5 +1,3 @@
-
-
 /*
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -19,6 +17,8 @@
 /* Notes: No warranty expressed or implied. Use at own risk. */
 #include "kernel/types.h"
 #include "x86/screen.h"
+#include "x86/io.h"
+#include "lib/string.h"
 
 /* These define our textpointer, our background and foreground
 *  colors (attributes), and x and y cursor coordinates */

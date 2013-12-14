@@ -1,12 +1,13 @@
-
 #include "kernel/kthread.h"
 #include "kernel/console.h"
 #include "kernel/types.h"
 #include "x86/timer.h"
 
+#include "lib/string.h"
 
 static int StackA[1024];
 static int taska_tid = -1;
+static char star[4] = {'|', '\\', '-', '/'};
 
 void task_a()
 {
@@ -14,7 +15,7 @@ void task_a()
 	while (1) {
 		settextcolor(0xa,0x1);
 		//screen_pos_puts("task_a:", 45, 0);
-		screen_pos_putch(star(count % 4), 52, 0);
+		screen_pos_putch(star[count % 4], 52, 0);
 		settextcolor(0xf,0x0);
 		count++;
 		timer_wait(2);

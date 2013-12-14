@@ -3,6 +3,6 @@
 
 #define NR_SYS_CALL 5
 
-int sys_get_ticks();
+unsigned int sys_get_ticks();
 
 #endif

@@ -1,6 +1,8 @@
 #include "x86/io.h"
 #include "x86/keyboard.h"
 #include "x86/keymap.h"
+#include "x86/irq.h"
+#include "x86/int.h"
 
 #define NUL	0x00 
 #define BS	0x08 

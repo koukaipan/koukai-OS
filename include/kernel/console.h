@@ -29,7 +29,7 @@
 #define CAN	0x18 
 #define EM	0x19 
 #define SUB	0x1a 
-#define ESC	0x1b 
+#define __ESC	0x1b 
 #define FS	0x1c 
 #define GS	0x1d 
 #define RS	0x1e 
@@ -38,8 +38,13 @@
 
 void console_init(void);
 
+void settextcolor(unsigned char forecolor, unsigned char backcolor);
+void screen_pos_puts(const char *text, int new_x, int new_y);
+void screen_pos_putch(char c, int new_x, int new_y);
+
 void console_puts(const char *text);
 void console_putc(char c);
+void console_putch(char c);
 void console_clear();
 
 int console_getc(void);

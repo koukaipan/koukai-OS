@@ -7,8 +7,11 @@
 #include "x86/screen.h"
 
 void task_a_prepare();
+void task_a_remove();
 void task_b_prepare();
+void task_b_remove();
 void task_c_prepare();
+void task_c_remove();
 
 struct Command {
 	char *name;
@@ -79,7 +82,7 @@ void shell_cmds(int argc, char **argv)
 void shell_ticks(int argc, char **argv)
 {
 	console_puts(" ticks = ");
-	console_puts(itoa(get_ticks(),10));
+	console_puts(itoa(sys_get_ticks(),10));
 	console_puts("\n");
 }
 
@@ -138,8 +141,6 @@ void shell_task_c(int argc, char **argv)
 
 void shell_stat(int argc, char **argv)
 {
-	int total_thread_cnt=1;
-
 	console_puts("*********** koukai-OS statistics info **************\n");
 /*	console_puts("Total Thread Count : %x\n", total_thread_cnt);
 	console_puts("Total Context Switch Count : %x\n", total_csw_cnt); */

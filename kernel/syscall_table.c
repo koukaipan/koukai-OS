@@ -2,9 +2,8 @@
 
 void* sys_call_table[NR_SYS_CALL] = {sys_get_ticks, 0};
 
-
-int sys_get_ticks()
+unsigned int __get_ticks();
+unsigned int sys_get_ticks()
 {
-	return get_tick();
+	return __get_ticks();
 }
-

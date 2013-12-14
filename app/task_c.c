@@ -1,11 +1,12 @@
-
 #include "kernel/kthread.h"
 #include "kernel/console.h"
 #include "kernel/types.h"
 
+#include "lib/string.h"
 
 static int StackC[1024];
 static int taskc_tid = -1;
+static char star[4] = {'|', '\\', '-', '/'};
 
 void c_delay()
 {
@@ -20,7 +21,7 @@ void task_c()
 	while (1) {
 		settextcolor(0xe,0x1);
 		//screen_pos_puts("task_c:", 63, 0);
-		screen_pos_putch(star(count % 4), 70, 0);
+		screen_pos_putch(star[count % 4], 70, 0);
 		settextcolor(0xf,0x0);
 		count++;
 		c_delay();
