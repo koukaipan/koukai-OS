@@ -1,5 +1,13 @@
+#######################################################################
+# compiler setting
+#######################################################################
+CC = gcc
+LD = ld
+OBJCOPY = objcopy
+INCLUDE_DIR = -I. -I./include
 
-.SUFFIXES:.asm .bin
+CFLAGS += -m32 -Wall -ffreestanding -nostdlib $(INCLUDE_DIR)
+LDFLAGS += -m elf_i386 -nostdlib
 
 APP_OBJS = \
 	app/shell.o \
@@ -37,15 +45,20 @@ LIB_OBJS = \
 
 ALL_OBJS =  $(KERN_OBJS) $(LIB_OBJS) $(X86_OBJS) $(APP_OBJS)
 
-all: floppy.img tags
+#######################################################################
+# common modules
+#######################################################################
+.PHONY: tags all
+.SUFFIXES:.asm .bin
 
-floppy.img:boot/bootsect.bin kernel.bin
-	dd if=/dev/zero of=floppy.img bs=512 count=2880
-	dd if=boot/bootsect.bin of=floppy.img bs=512 seek=0 conv=notrunc
-	dd if=kernel.bin of=floppy.img bs=512 seek=1 conv=notrunc
+TARGET = koukai-OS.img
 
-test:floppy.img
-	qemu -fda $< -s
+all: $(TARGET) tags
+
+$(TARGET):boot/bootsect.bin kernel.bin
+	dd if=/dev/zero of=$(TARGET) bs=512 count=2880
+	dd if=boot/bootsect.bin of=$(TARGET) bs=512 seek=0 conv=notrunc
+	dd if=kernel.bin of=$(TARGET) bs=512 seek=1 conv=notrunc
 
 %.bin:%.asm
 	nasm -f bin $< -o $@
@@ -53,7 +66,6 @@ test:floppy.img
 %.o:%.asm
 	nasm -f elf $< -o $@
 
-CFLAGS += -ffreestanding -nostdlib -I./ -I./include -m32
 %.o:%.c
 	gcc $(CFLAGS) -c $< -o $@
 
@@ -61,30 +73,18 @@ CFLAGS += -ffreestanding -nostdlib -I./ -I./include -m32
 	gcc -S $< -o $@
 	
 kernel.bin: $(ALL_OBJS)
-	ld --oformat binary -m elf_i386 -nostdlib -T link.ld -o $@ $^
-
-#kernel.elf: $(ALL_OBJS)
-#	ld --oformat elf32-i386 -nostdlib -T link.ld -o $@ $^
+	ld $(LDFLAGS) --oformat binary -T link.ld -o $@ $^
 
 # elf image (could be booted by other bootloader such as grub)
 kernel.elf.bin: boot/entry.o $(ALL_OBJS)
-	ld -nostdlib -T link.elf.ld -o $@ $^
-
-#kernel.o2: $(ALL_OBJS)
-	#ld -nostdlib -e main -Ttext 0x10000 -o $@ $^
-
-#kernel.bin2:kernel.o2
-	#objcopy -R .note -R .comment -S -O binary $< $@
+	ld $(LDFLAGS) --oformat elf32-i386 -T link.elf.ld -o $@ $^
 
 clean:
-	rm  -f *.o *.bin *.bin2 *.img *.o2 *.s  $(ALL_OBJS) boot/bootsect.bin tags
+	rm  -f *.o *.bin *.bin2 *.img $(ALL_OBJS) boot/bootsect.bin tags
 
 tags:
 	ctags -R . 
-	
 
-# gcc - -freeseestanding
-# ld    -nostdlib
+run: $(TARGET)
+	qemu -fda $< -boot a
 
-.PHONY:
-	tags
