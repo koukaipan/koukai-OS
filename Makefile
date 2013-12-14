@@ -25,9 +25,11 @@ X86_OBJS = \
 	arch/x86/global.o \
 	arch/x86/idt.o \
 	arch/x86/gdt.o \
-	arch/x86/isrs.o \
-	arch/x86/x86.o \
+	arch/x86/gdt_asm.o \
+	arch/x86/isr.o \
+	arch/x86/isr_asm.o \
 	arch/x86/irq.o \
+	arch/x86/irq_asm.o \
 	arch/x86/timer.o \
 	arch/x86/screen.o \
 	arch/x86/io.o \
