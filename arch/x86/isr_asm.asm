@@ -1,6 +1,3 @@
-APIC_BASE_ADDR          equ     0xfee00000
-APIC_EOI_ADDR           equ     APIC_BASE_ADDR + 0xb0
-
 ; In just a few pages in this tutorial, we will add our Interrupt
 ; Service Routines (ISRs) right here!
 global isr0
@@ -144,18 +141,10 @@ isr15:
 
 ; 16: Floating Point Exception
 isr16:
-	;APIC ISR
-	mov ax, 0x18
-	mov gs, ax
-	mov	ah, 0Ch				; 0000:黑底, 1100:紅字
-	inc	byte [gs:((80*0 + 75)*2)]	; 屏幕第 0 行, 第 0 列。
-	mov	[APIC_EOI_ADDR], dword 0
-	iret
-	; 必須把原本的中斷處理註解掉,否則會關機
-    ;cli
-    ;push byte 0
-    ;push byte 16
-    ;jmp isr_common_stub
+    cli
+    push byte 0
+    push byte 16
+    jmp isr_common_stub
 
 ; 17: Alignment Check Exception
 isr17:
@@ -256,11 +245,21 @@ isr30:
     jmp isr_common_stub
 
 ; 31: Reserved
+;APIC Timer ISR
 isr31:
-    cli
-    push byte 0
-    push byte 31
-    jmp isr_common_stub
+APIC_BASE_ADDR          equ     0xfee00000
+APIC_EOI_ADDR           equ     APIC_BASE_ADDR + 0xb0
+	mov ax, 0x18
+	mov gs, ax
+	mov	ah, 0Ch				; 0000:黑底, 1100:紅字
+	inc	byte [gs:((80*0 + 75)*2)]	; 屏幕第 0 行, 第 0 列。
+	mov	[APIC_EOI_ADDR], dword 0
+	iret
+	; 必須把原本的中斷處理註解掉,否則會關機
+    ;cli
+    ;push byte 0
+    ;push byte 31
+    ;jmp isr_common_stub
 
 
 ; We call a C function in here. We need to let the assembler know
