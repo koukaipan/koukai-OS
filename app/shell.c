@@ -19,7 +19,7 @@ struct Command {
 	void (*func)(int argc, char **argv);
 };
 
-void shell_cmds(int argc, char **argv);
+void shell_help(int argc, char **argv);
 void shell_mem(int argc, char **argv);
 void shell_lspci(int argc, char **argv);
 void shell_date(int argc, char **argv);
@@ -32,7 +32,7 @@ void shell_cls(int argc, char **argv);
 void shell_stat(int argc, char **argv);
 
 static struct Command commands[] = {
-	{"cmds",	"Show all supported commands", shell_cmds},
+	{"help",	"Show all supported commands", shell_help},
 	{"minfo",	"Test memory size", shell_mem},
 	{"lspci",	"List all PCI devices", shell_lspci},
 	{"date",	"Print the system date", shell_date},
@@ -63,7 +63,7 @@ void shell_cls(int argc, char **argv)
 {
 	console_clear();
 }
-void shell_cmds(int argc, char **argv)
+void shell_help(int argc, char **argv)
 {
 	int i = 0;
 
