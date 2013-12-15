@@ -42,8 +42,8 @@ int RR(int curr)
 	/* To find a valid task */
 	do {
 		ready++;
-	} while (tasks[ready].tid < 0);
-	if(ready > task_cnt)
+	} while (ready < MAX_TASKS && tasks[ready].tid < 0);
+	if(ready >= MAX_TASKS)
 		ready = 0;
 	if(task_cnt <= 0)
 		ready = 0;
