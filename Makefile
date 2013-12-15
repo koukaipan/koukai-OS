@@ -49,7 +49,7 @@ ALL_OBJS =  $(KERN_OBJS) $(LIB_OBJS) $(X86_OBJS) $(APP_OBJS)
 # common modules
 #######################################################################
 .PHONY: tags all
-.SUFFIXES:.asm .bin
+.SUFFIXES:.asm .bin .S
 
 TARGET = koukai-OS.img
 
@@ -67,6 +67,9 @@ $(TARGET):boot/bootsect.bin kernel.bin
 	nasm -f elf $< -o $@
 
 %.o:%.c
+	gcc $(CFLAGS) -c $< -o $@
+
+%.o:%.S
 	gcc $(CFLAGS) -c $< -o $@
 
 %.s:%.c

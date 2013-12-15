@@ -1,4 +1,5 @@
-%include "arch/x86/apic_addr.inc"
+APIC_BASE_ADDR          equ     0xfee00000
+APIC_EOI_ADDR           equ     APIC_BASE_ADDR + 0xb0
 
 ; In just a few pages in this tutorial, we will add our Interrupt
 ; Service Routines (ISRs) right here!
