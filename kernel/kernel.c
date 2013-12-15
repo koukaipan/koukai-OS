@@ -24,7 +24,6 @@
 #include "x86/timer.h"
 #include "x86/schedule.h"
 #include "kernel/kthread.h"
-#include "kernel/global.h"
 #include "app/shell.h"
 #include "lib/string.h"
 

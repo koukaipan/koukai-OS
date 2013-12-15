@@ -19,10 +19,30 @@
 #include "x86/gdt.h"
 #include "x86/protect.h"
 #include "x86/process.h"
-#include "kernel/global.h"
-/* This is in start.asm. We use this to properly reload
-*  the new segment registers */
-extern void gdt_flush();
+
+/* Our GDT, with 3 entries, and finally our special GDT pointer */
+struct gdt_entry gdt[10];
+
+/**
+ * @brief to properly reload the new segment registers
+ *
+ * @param gp gdt table pointer
+ */
+static void gdt_flush(struct gdt_ptr gp)
+{
+	__asm__	(
+		"lgdtw %0\t\n"
+		"movl $0x10, %%eax\t\n"
+		"movl %%eax, %%ds\t\n"
+		"movl %%eax, %%es\t\n"
+		"movl %%eax, %%fs\t\n"
+		"movl %%eax, %%gs\t\n"
+		"movl %%eax, %%ss\t\n"
+		:	/* y is output operand */
+		:"m"(gp)		/* x is input operand */
+		:"%eax"	/* clobbered registers */
+	);
+}
 
 /**
  * @brief Setup a descriptor in the Global Descriptor Table
@@ -55,6 +75,7 @@ void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned cha
 void gdt_install()
 {
 	/* Setup the GDT pointer and limit */
+	struct gdt_ptr gp;
 	gp.limit = (sizeof(struct gdt_entry) * 10) - 1;
 	gp.base = (unsigned int)&gdt;
 
@@ -78,5 +99,5 @@ void gdt_install()
 	gdt_set_gate(3, 0xB8000, 0xFFFFFFFF, 0x92, 0xCF);
 
 	/* Flush out the old GDT and install the new changes! */
-	gdt_flush();
+	gdt_flush(gp);
 }

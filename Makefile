@@ -22,10 +22,8 @@ KERN_OBJS = \
 	kernel/kthread.o
 
 X86_OBJS = \
-	arch/x86/global.o \
 	arch/x86/idt.o \
 	arch/x86/gdt.o \
-	arch/x86/gdt_asm.o \
 	arch/x86/isr.o \
 	arch/x86/isr_asm.o \
 	arch/x86/irq.o \
