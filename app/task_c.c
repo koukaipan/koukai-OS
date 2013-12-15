@@ -42,5 +42,5 @@ void task_c_remove()
 	asm("sti");
 	memset(StackC, 0, sizeof(StackC));
 	settextcolor(0xf,0x0);
-	screen_pos_puts("        ", 63, 0);
+	screen_pos_putch(' ', 70, 0);
 }
