@@ -1,6 +1,5 @@
-
 #include "x86/schedule.h"
-#include "kernel/kthread.h"
+#include "kernel/task.h"
 #include "kernel/console.h"
 
 int total_csw_cnt = 0;
@@ -8,32 +7,31 @@ int total_csw_cnt = 0;
 /**
  * @brief load a method to run
  *
- * where the state of ready task is KT_INIT, kernel will call run_kt()
+ * If the state of ready task is TASK_INIT, kernel will call run_task()
  * to run the newly task, and it will *NOT* return.
- *
  */
-void run_kt()
+void run_task()
 {
 	int *s= current->stack;
 	void (*func)(void) = current->func;
-	current->state = KT_RUNNING;
+	current->state = TASK_RUNNING;
 
 	__asm__  __volatile__ (
-			"mov %0,%%esp\n\t"
-			"push %1\n\t"
-			"sti\n\t"
-			"ret\n\t"
-			:
-			: "m"(s) , "m"(func)
-			: "esp"
-			);
+		"mov %0,%%esp\n\t"
+		"push %1\n\t"
+		"sti\n\t"
+		"ret\n\t"
+		:
+		: "m"(s) , "m"(func)
+		: "esp"
+	);
 	
 }
 
 /**
  * @brief Round-Robin scheduler
- * @param current current thread number =/= tid
- * @return thread number ready to run
+ * @param current current task id
+ * @return task id which is ready to run
  *
  * pick up a ready task to run
  *
@@ -41,13 +39,13 @@ void run_kt()
 int RR(int curr)
 {
 	int ready = curr;
-	/* To find a valid kt */
+	/* To find a valid task */
 	do {
 		ready++;
-	} while (kt[ready].tid < 0);
-	if(ready > kt_num)
+	} while (tasks[ready].tid < 0);
+	if(ready > task_cnt)
 		ready = 0;
-	if(kt_num <= 0)
+	if(task_cnt <= 0)
 		ready = 0;
 
 	return ready;
@@ -58,29 +56,29 @@ extern void os_ctx_sw();
 
 void reschedule()
 {
-	int kt_ready;
+	int task_ready;
 
-	current->state = KT_WAIT;
-	current->stack = kt_current_sp;
+	current->state = TASK_WAIT;
+	current->stack = task_current_sp;
 
-	kt_ready = RR(kt_current);
+	task_ready = RR(task_current);
 
-	if(kt[kt_ready].state == KT_INIT){
-		//console_puts(" try run_kt\n");
-		kt_current = kt_ready;
-		run_kt(); 
+	if(tasks[task_ready].state == TASK_INIT){
+		//console_puts(" try run_task\n");
+		task_current = task_ready;
+		run_task();
 
 		// never run here
 	}
-	if (kt_current == kt_ready)
+	if (task_current == task_ready)
 	{
-		kt[kt_current].state = KT_RUNNING;
+		tasks[task_current].state = TASK_RUNNING;
 		return;
 	}
 
-	kt_current = kt_ready;
-	current->state = KT_RUNNING;
-	kt_current_sp = kt[kt_current].stack;
+	task_current = task_ready;
+	current->state = TASK_RUNNING;
+	task_current_sp = tasks[task_current].stack;
 
 	/* we are now in interrupt context */
 //	return;

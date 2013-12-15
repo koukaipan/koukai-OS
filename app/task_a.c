@@ -1,4 +1,4 @@
-#include "kernel/kthread.h"
+#include "kernel/task.h"
 #include "kernel/console.h"
 #include "kernel/types.h"
 #include "x86/timer.h"
@@ -25,14 +25,14 @@ void task_a()
 void task_a_prepare()
 {
 	asm("cli");
-	taska_tid = kt_create(StackA+1024-1, "task_a", task_a, 3);
+	taska_tid = task_create(StackA+1024-1, "task_a", task_a, 3);
 	asm("sti");
 }
 
 void task_a_remove()
 {
 	asm("cli");
-	kt_destroy(taska_tid);
+	task_destroy(taska_tid);
 	asm("sti");
 	memset(StackA, 0, sizeof(StackA));
 	settextcolor(0xf,0x0);

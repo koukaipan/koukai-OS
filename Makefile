@@ -19,7 +19,7 @@ KERN_OBJS = \
 	kernel/kernel.o \
 	kernel/console.o \
 	kernel/syscall_table.o \
-	kernel/kthread.o
+	kernel/task.o
 
 X86_OBJS = \
 	arch/x86/idt.o \

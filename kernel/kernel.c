@@ -23,7 +23,7 @@
 #include "x86/pci.h"
 #include "x86/timer.h"
 #include "x86/schedule.h"
-#include "kernel/kthread.h"
+#include "kernel/task.h"
 #include "app/shell.h"
 #include "lib/string.h"
 
@@ -33,16 +33,10 @@ void c_main()
 {
 	x86_init();
 	
-	/* init kernel threads */
-	init_kthreads();
+	task_init();
 
-	kt[0].tid = 0;
-	strcpy(kt[0].fname, "init");
+	tasks[0].tid = 0;
+	strcpy(tasks[0].fname, "init");
 
 	shell_main();
-}
-
-void init_thread()
-{
-	reschedule();
 }

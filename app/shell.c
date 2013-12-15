@@ -1,6 +1,6 @@
 #include "kernel/console.h"
 #include "kernel/types.h"
-#include "kernel/kthread.h"
+#include "kernel/task.h"
 #include "kernel/syscall_table.h"
 #include "lib/string.h"
 #include "lib/itoa.h"
@@ -47,14 +47,14 @@ static struct Command commands[] = {
 #define NCOMMANDS (sizeof(commands)/sizeof(commands[0]))
 
 static char *state_to_string[8] = {
-	[KT_INIT]		= "Init      ",
-	[KT_READY] 		= "Ready     ",
-	[KT_RUNNING] 		= "Running   ",
-	[KT_WAIT] 		= "Wait      ",
-	[KT_EVENT_WAIT] 	= "Event wait",
-	[KT_BLOCK] 		= "Block     ",
-	[KT_DELAY] 		= "Delay     ",
-	[KT_TERMINATE] 		= "Terminate ",
+	[TASK_INIT]		= "Init      ",
+	[TASK_READY] 		= "Ready     ",
+	[TASK_RUNNING] 		= "Running   ",
+	[TASK_WAIT] 		= "Wait      ",
+	[TASK_EVENT_WAIT] 	= "Event wait",
+	[TASK_BLOCK] 		= "Block     ",
+	[TASK_DELAY] 		= "Delay     ",
+	[TASK_TERMINATE] 		= "Terminate ",
 };
 
 /***** Implementations of basic kernel monitor commands *****/
@@ -156,18 +156,18 @@ void shell_tasks(int argc, char **argv)
 
     settextcolor(0xa,0x0);
     console_puts("PID\tTASK\tSTATE\n");
-    for (i=0; i<=kt_num; i++)
+    for (i=0; i<=task_cnt; i++)
     {
-        if (kt[i].tid < 0) continue;
+        if (tasks[i].tid < 0) continue;
         console_puts("  ");
         settextcolor(0xf,0x0);
-        console_puts(itoa(kt[i].tid,10));
+        console_puts(itoa(tasks[i].tid,10));
         console_putch('\t');
         settextcolor(0xe,0x0);
-        console_puts(kt[i].fname);
+        console_puts(tasks[i].fname);
         console_putch('\t');
         settextcolor(0xd,0x0);
-        console_puts(state_to_string[kt[i].state]);
+        console_puts(state_to_string[tasks[i].state]);
         console_putch('\n');
     }
     settextcolor(0xf,0x0);

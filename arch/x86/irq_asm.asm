@@ -183,7 +183,7 @@ irq_timer_stub:
     mov fs, ax
     mov gs, ax
 
-    mov     eax,kt_current_sp
+    mov     eax,task_current_sp
     mov     [eax],esp
 
     mov eax, os_timer_ticks
@@ -191,7 +191,7 @@ irq_timer_stub:
     mov eax, reschedule
     call eax
 
-    mov eax,kt_current_sp
+    mov eax,task_current_sp
     mov esp,[eax]
 
     pop gs
@@ -202,10 +202,10 @@ irq_timer_stub:
 
     iret
 
-extern kt_current_sp
+extern task_current_sp
 global os_ctx_sw
 os_ctx_sw:
-    mov     eax,kt_current_sp
+    mov     eax,task_current_sp
     mov     esp,[eax]
 
     pop gs
