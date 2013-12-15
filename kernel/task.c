@@ -59,9 +59,11 @@ int task_create(void* stack, char* name, void (*func)(void), int prio)
  */
 void task_destroy(int tid)
 {
+	task_cnt--;
+
 	tasks[tid].tid = -1;
 	tasks[tid].stack = NULL;
 	tasks[tid].func = NULL;
-	tasks[tid].state = 0;
+	tasks[tid].state = TASK_TERMINATE;
 	tasks[tid].fname[0] = '\0';
 }
