@@ -31,16 +31,25 @@ void task_init()
  */
 int task_create(void* stack, char* name, void (*func)(void), int prio)
 {
-	task_cnt++;
+	int new_tid = 0;
 
-	tasks[task_cnt].tid = task_cnt;
-	tasks[task_cnt].stack = stack;
-	tasks[task_cnt].func = func;
-	tasks[task_cnt].state = TASK_INIT;
-	tasks[task_cnt].prio = prio;
-	strcpy(tasks[task_cnt].fname, name);
+	/* find a empty tid */
+	while(new_tid < MAX_TASKS && tasks[new_tid].tid != -1)
+		new_tid++;
 
-	return tasks[task_cnt].tid;
+	if(new_tid < MAX_TASKS) {
+		task_cnt++;
+		tasks[task_cnt].tid = new_tid;
+		tasks[task_cnt].stack = stack;
+		tasks[task_cnt].func = func;
+		tasks[task_cnt].state = TASK_INIT;
+		tasks[task_cnt].prio = prio;
+		strcpy(tasks[task_cnt].fname, name);
+
+		return tasks[task_cnt].tid;
+	}
+
+	return -1;
 }
 
 /**
