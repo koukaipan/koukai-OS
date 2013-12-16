@@ -36,7 +36,8 @@ X86_OBJS = \
 	arch/x86/apic.o \
 	arch/x86/keyboard.o \
 	arch/x86/schedule.o \
-	arch/x86/syscall.o
+	arch/x86/syscall.o \
+	arch/x86/ctx_sw.o
 	
 LIB_OBJS = \
 	lib/string.o

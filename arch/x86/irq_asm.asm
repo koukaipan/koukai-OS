@@ -16,22 +16,13 @@ global irq13
 global irq14
 global irq15
 
-extern timer_handler
-extern timer_handler2
+extern irq_timer_stub
 
 ;Timer Interrupt !!! go to different stub
 ; 32: IRQ0
 irq0:
     cli
-	;mov ax, 0x18
-	;mov gs, ax
-	;mov	ah, 0Ch				; 0000:黑底, 1100:紅字
-	;inc	byte [gs:((80*1 + 74)*2)]	; 屏幕第 10 行, 第 0 列。
-	jmp irq_timer_stub
-	;改成呼叫common_stub, 要記得先push 0,32
-    push byte 0
-    push byte 32
-    jmp irq_common_stub
+    jmp irq_timer_stub
 
 ; 33: IRQ1
 irq1:
@@ -165,53 +156,4 @@ irq_common_stub:
     pop ds
     popad
     add esp, 8
-    iret
-
-extern os_timer_ticks
-extern reschedule
-irq_timer_stub:
-    pushad
-    push ds
-    push es
-    push fs
-    push gs
-
-    ;the 2nd entry of GDT
-    mov ax, 0x10
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-
-    mov     eax,task_current_sp
-    mov     [eax],esp
-
-    mov eax, os_timer_ticks
-    call eax
-    mov eax, reschedule
-    call eax
-
-    mov eax,task_current_sp
-    mov esp,[eax]
-
-    pop gs
-    pop fs
-    pop es
-    pop ds
-    popad
-
-    iret
-
-extern task_current_sp
-global os_ctx_sw
-os_ctx_sw:
-    mov     eax,task_current_sp
-    mov     esp,[eax]
-
-    pop gs
-    pop fs
-    pop es
-    pop ds
-    popad
-
     iret
