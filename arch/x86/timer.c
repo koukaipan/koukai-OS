@@ -19,10 +19,10 @@
 /* Notes: No warranty expressed or implied. Use at own risk. */
 #include "kernel/console.h"
 #include "kernel/types.h"
-#include "lib/itoa.h"
 #include "x86/x86.h"
 #include "x86/irq.h"
 #include "x86/io.h"
+#include "x86/schedule.h"
 
 /* This will keep track of how many ticks that the system
 *  has been running for */
@@ -41,15 +41,7 @@ void timer_handler(struct regs *r)
     /* Increment our 'tick count' */
     _g_timer_ticks++;
 
-    /* Every 18 clocks (approximately 1 second), we will
-    *  display a message on the screen */
-    //if (_g_timer_ticks % 180 == 0)
-    //{
-        //console_puts("10 seconds has passed -- ");
-        //console_puts("Ticks = ");
-        //console_puts(itoa(_g_timer_ticks,10));
-        //console_puts("\n");
-    //}
+    reschedule();
 }
 
 unsigned int __get_ticks()

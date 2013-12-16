@@ -17,12 +17,14 @@ global irq14
 global irq15
 
 extern irq_timer_stub
+extern task_current_sp
 
-;Timer Interrupt !!! go to different stub
-; 32: IRQ0
+; 32: IRQ0 Timer
 irq0:
     cli
-    jmp irq_timer_stub
+    push byte 0
+    push byte 32
+    jmp irq_common_stub
 
 ; 33: IRQ1
 irq1:
@@ -143,17 +145,27 @@ irq_common_stub:
     mov es, ax
     mov fs, ax
     mov gs, ax
-    mov eax, esp
 
+    ; save stack
+    mov     eax, task_current_sp
+    mov     [eax],esp
+
+    ;1st argument of irq_handler (point to top of stack
+    mov eax, esp
     push eax
     mov eax, irq_handler
     call eax
     pop eax
+
+    ; restore stack
+    mov     eax, task_current_sp
+    mov     esp, [eax]
 
     pop gs
     pop fs
     pop es
     pop ds
     popad
+
     add esp, 8
     iret
