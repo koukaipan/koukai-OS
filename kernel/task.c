@@ -39,14 +39,14 @@ int task_create(void* stack, char* name, void (*func)(void), int prio)
 
 	if(new_tid < MAX_TASKS) {
 		task_cnt++;
-		tasks[task_cnt].tid = new_tid;
-		tasks[task_cnt].stack = stack;
-		tasks[task_cnt].func = func;
-		tasks[task_cnt].state = TASK_INIT;
-		tasks[task_cnt].prio = prio;
-		strcpy(tasks[task_cnt].fname, name);
+		tasks[new_tid].tid = new_tid;
+		tasks[new_tid].stack = stack;
+		tasks[new_tid].func = func;
+		tasks[new_tid].state = TASK_INIT;
+		tasks[new_tid].prio = prio;
+		strcpy(tasks[new_tid].fname, name);
 
-		return tasks[task_cnt].tid;
+		return tasks[new_tid].tid;
 	}
 
 	return -1;
