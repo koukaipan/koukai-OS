@@ -15,8 +15,10 @@ struct task tasks[MAX_TASKS];
 void task_init()
 {
 	int i;
-	for (i=0; i<MAX_TASKS; i++)
+	for (i=0; i<MAX_TASKS; i++) {
 		tasks[i].tid = -1;
+		tasks[i].state = TASK_TERMINATE;
+	}
 }
 
 /**
