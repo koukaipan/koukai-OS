@@ -27,7 +27,13 @@
 #include "app/shell.h"
 #include "lib/string.h"
 
-//static int stack[1024];
+int init_stack[1024];
+int init_tid = -1;
+
+int shell_stack[1024];
+int shell_tid = -1;
+
+void init();
 
 void c_main()
 {
@@ -36,7 +42,20 @@ void c_main()
 	task_init();
 
 	tasks[0].tid = 0;
-	strcpy(tasks[0].fname, "init");
+	strcpy(tasks[0].fname, "0");
 
-	shell_main();
+//	shell_main();
+
+	init_tid = task_create(init_stack+1024-1, "init", init, 0);
+	/* nothing to do */
+	while(1)
+		timer_wait(20000);
+}
+
+void init()
+{
+	shell_tid = task_create(shell_stack+1024-1, "shell", shell_main, 0);
+	/* nothing to do */
+	while(1)
+		timer_wait(20000);
 }
