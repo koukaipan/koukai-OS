@@ -3,8 +3,9 @@
 #include "lib/string.h"
 
 int task_cnt = 0;
-int task_current = 0; //kernel main thread
-int* task_current_sp = 0;
+int curr_task_tid = 0; //kernel main thread
+int* curr_task_sp = 0;
+int next_task_tid = 0;
 struct task tasks[MAX_TASKS];
 
 /**
@@ -68,4 +69,65 @@ void task_destroy(int tid)
 	tasks[tid].func = NULL;
 	tasks[tid].state = TASK_TERMINATE;
 	tasks[tid].fname[0] = '\0';
+}
+
+
+/**
+ * @brief Round-Robin scheduler
+ */
+void task_sched_RR()
+{
+	next_task_tid = curr_task_tid;
+	/* To find a valid task */
+	do {
+		next_task_tid++;
+	} while (tasks[next_task_tid].tid < 0 && next_task_tid < MAX_TASKS);
+	if(next_task_tid >= MAX_TASKS)
+		next_task_tid = 0;
+	else if(next_task_tid < 0)
+		next_task_tid = 0;
+}
+
+/**
+ * @brief pick up a ready task to run with specific scheduler
+ */
+void task_pick_next()
+{
+	task_sched_RR();
+}
+
+/**
+ * @brief
+ *
+ * @retval TRUE we need reschedule a ready task
+ * @retval FALSE we don't need.
+ */
+int need_resched()
+{
+	/* suspend current task */
+	current->state = TASK_WAIT;
+	current->stack = curr_task_sp;
+
+	task_pick_next();
+
+	if(tasks[next_task_tid].state == TASK_INIT)
+	{
+		curr_task_tid = next_task_tid;
+		task_start();
+		/* never reach here */
+	}
+
+	/* run continualy */
+	if (curr_task_tid == next_task_tid)
+	{
+		tasks[curr_task_tid].state = TASK_RUNNING;
+		return FALSE;
+	}
+
+	/* resume ready task */
+	curr_task_tid = next_task_tid;
+	current->state = TASK_RUNNING;
+	curr_task_sp = tasks[curr_task_tid].stack;
+
+	return TRUE;
 }

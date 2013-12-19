@@ -17,7 +17,8 @@ global irq14
 global irq15
 
 extern irq_timer_stub
-extern task_current_sp
+extern curr_task_sp
+extern task_resched_int
 
 ; 32: IRQ0 Timer
 irq0:
@@ -140,6 +141,7 @@ irq_common_stub:
     push fs
     push gs
 
+    ;the 2nd entry of GDT
     mov ax, 0x10
     mov ds, ax
     mov es, ax
@@ -147,7 +149,7 @@ irq_common_stub:
     mov gs, ax
 
     ; save stack
-    mov     eax, task_current_sp
+    mov     eax, curr_task_sp
     mov     [eax],esp
 
     ;1st argument of irq_handler (point to top of stack
@@ -157,8 +159,11 @@ irq_common_stub:
     call eax
     pop eax
 
+    mov eax, task_resched_int
+    call eax
+
     ; restore stack
-    mov     eax, task_current_sp
+    mov     eax, curr_task_sp
     mov     esp, [eax]
 
     pop gs

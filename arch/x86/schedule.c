@@ -10,7 +10,7 @@ int total_csw_cnt = 0;
  * If the state of ready task is TASK_INIT, kernel will call run_task()
  * to run the newly task, and it will *NOT* return.
  */
-void run_task()
+void task_start()
 {
 	int *s= current->stack;
 	void (*func)(void) = current->func;
@@ -28,62 +28,49 @@ void run_task()
 	
 }
 
-/**
- * @brief Round-Robin scheduler
- * @param current current task id
- * @return task id which is ready to run
- *
- * pick up a ready task to run
- *
- */
-int RR(int curr)
-{
-	int ready = curr;
-	/* To find a valid task */
-	do {
-		ready++;
-	} while (ready < MAX_TASKS && tasks[ready].tid < 0);
-	if(ready >= MAX_TASKS)
-		ready = 0;
-	if(task_cnt <= 0)
-		ready = 0;
-
-	return ready;
-}
-
-
 extern void os_ctx_sw();
+extern void os_ctx_sw_int();
+
+void task_resched_int()
+{
+	if(need_resched()) {
+	/* we are *NOW* in interrupt context */
+		total_csw_cnt++;
+		__asm__  __volatile__ (
+			"jmp os_ctx_sw_int\n\t"
+		);
+	}
+}
 
 void reschedule()
 {
-	int task_ready;
-
+	/* suspend current task */
 	current->state = TASK_WAIT;
-	current->stack = task_current_sp;
+	current->stack = curr_task_sp;
 
-	task_ready = RR(task_current);
+	task_pick_next();
 
-	if(tasks[task_ready].state == TASK_INIT){
-		//console_puts(" try run_task\n");
-		task_current = task_ready;
-		run_task();
-
-		// never run here
+	if(tasks[next_task_tid].state == TASK_INIT){
+		curr_task_tid = next_task_tid;
+		task_start();
+		/* never reach here */
 	}
-	if (task_current == task_ready)
+
+	/* run continualy */
+	if (curr_task_tid == next_task_tid)
 	{
-		tasks[task_current].state = TASK_RUNNING;
+		tasks[curr_task_tid].state = TASK_RUNNING;
 		return;
 	}
 
-	task_current = task_ready;
+	/* resume ready task */
+	curr_task_tid = next_task_tid;
 	current->state = TASK_RUNNING;
-	task_current_sp = tasks[task_current].stack;
+	curr_task_sp = tasks[curr_task_tid].stack;
 
 	/* we are now in interrupt context */
-//	return;
 	total_csw_cnt++;
 	__asm__  __volatile__ (
-		"jmp os_ctx_sw\n\t"
+		"jmp os_ctx_sw_int\n\t"
 		);
-} 
+}

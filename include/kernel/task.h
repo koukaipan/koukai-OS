@@ -40,15 +40,21 @@ struct task
 void task_init();
 int task_create(void* stack, char* name, void (*func)(void), int prio);
 void task_destroy(int fn);
+void task_pick_next();
+int need_resched();
 
-#define current (&tasks[task_current])
+#define current (&tasks[curr_task_tid])
 
 /****************************************************************************
 *	GLOBAL VARIABLES
 *****************************************************************************/
 extern int task_cnt;
-extern int task_current;
-extern int* task_current_sp;
+extern int curr_task_tid;
+extern int* curr_task_sp;
+extern int next_task_tid;
 extern struct task tasks[MAX_TASKS];
+
+/* not implement here */
+void task_start();
 
 #endif
