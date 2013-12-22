@@ -22,7 +22,7 @@
 #include "x86/x86.h"
 #include "x86/irq.h"
 #include "x86/io.h"
-#include "x86/schedule.h"
+#include "x86/task.h"
 
 /* This will keep track of how many ticks that the system
 *  has been running for */

@@ -1,4 +1,4 @@
-#include "x86/schedule.h"
+#include "x86/task.h"
 #include "kernel/task.h"
 #include "kernel/console.h"
 
@@ -25,7 +25,6 @@ void task_start()
 		: "m"(s) , "m"(func)
 		: "esp"
 	);
-	
 }
 
 extern void os_ctx_sw();

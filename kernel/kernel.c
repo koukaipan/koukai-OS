@@ -22,7 +22,7 @@
 #include "x86/process.h"
 #include "x86/pci.h"
 #include "x86/timer.h"
-#include "x86/schedule.h"
+#include "x86/task.h"
 #include "kernel/task.h"
 #include "app/shell.h"
 #include "lib/string.h"
