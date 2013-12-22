@@ -41,7 +41,7 @@ void timer_handler(struct regs *r)
     /* Increment our 'tick count' */
     _g_timer_ticks++;
 
-    reschedule();
+    //reschedule();
 }
 
 unsigned int __get_ticks()

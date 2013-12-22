@@ -41,7 +41,7 @@ void task_resched_int()
 	}
 }
 
-void reschedule()
+void schedule()
 {
 	/* suspend current task */
 	current->state = TASK_WAIT;

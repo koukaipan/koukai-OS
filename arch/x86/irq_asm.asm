@@ -161,16 +161,5 @@ irq_common_stub:
 
     mov eax, task_resched_int
     call eax
+    ; task_resched_int will invoke os_ctx_sw, so it will not return here.
 
-    ; restore stack
-    mov     eax, curr_task_sp
-    mov     esp, [eax]
-
-    pop gs
-    pop fs
-    pop es
-    pop ds
-    popad
-
-    add esp, 8
-    iret
