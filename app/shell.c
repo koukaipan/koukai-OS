@@ -156,7 +156,7 @@ void shell_tasks(int argc, char **argv)
 
     settextcolor(0xa,0x0);
     console_puts("PID\tTASK\tSTATE\n");
-    for (i=0; i<=task_cnt; i++)
+    for (i=0; i<MAX_TASKS; i++)
     {
         if (tasks[i].tid < 0) continue;
         console_puts("  ");
