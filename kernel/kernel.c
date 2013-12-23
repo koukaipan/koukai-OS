@@ -18,11 +18,8 @@
 /* Notes: No warranty expressed or implied. Use at own risk. */
 #include "kernel/console.h"
 #include "x86/x86.h"
-#include "x86/protect.h"
-#include "x86/process.h"
-#include "x86/pci.h"
 #include "x86/timer.h"
-#include "x86/task.h"
+#include "x86/int.h"
 #include "kernel/task.h"
 #include "app/shell.h"
 #include "lib/string.h"
@@ -34,6 +31,7 @@ int shell_stack[1024];
 int shell_tid = -1;
 
 void init();
+void start_kernel();
 
 void c_main()
 {
@@ -43,13 +41,17 @@ void c_main()
 
 	tasks[0].tid = 0;
 	strcpy(tasks[0].fname, "0");
-
-//	shell_main();
+	start_kernel();
 
 	init_tid = task_create(init_stack+1024-1, "init", init, 0);
 	/* nothing to do */
 	while(1)
 		timer_wait(20000);
+}
+
+void start_kernel()
+{
+	asm __volatile__ ("sti");
 }
 
 void init()

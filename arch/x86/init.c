@@ -38,6 +38,4 @@ void x86_init()
 	
 	timer_install();
 	init_keyboard();
-	
-	__asm__ __volatile__ ("sti");
 }

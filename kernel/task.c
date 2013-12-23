@@ -1,6 +1,7 @@
 #include "kernel/types.h"
 #include "kernel/task.h"
 #include "lib/string.h"
+#include "x86/int.h"
 
 int task_cnt = 0;
 int curr_task_tid = 0; //kernel main thread
@@ -35,23 +36,28 @@ void task_init()
 int task_create(void* stack, char* name, void (*func)(void), int prio)
 {
 	int new_tid = 0;
+	void* pstk = NULL;
 
+	disable_int();
 	/* find a empty tid */
 	while(new_tid < MAX_TASKS && tasks[new_tid].tid != -1)
 		new_tid++;
 
 	if(new_tid < MAX_TASKS) {
 		task_cnt++;
+		pstk = task_stack_init(func, NULL, stack);
 		tasks[new_tid].tid = new_tid;
-		tasks[new_tid].stack = stack;
+		tasks[new_tid].stack = pstk;
 		tasks[new_tid].func = func;
-		tasks[new_tid].state = TASK_INIT;
+		tasks[new_tid].state = TASK_WAIT;
 		tasks[new_tid].prio = prio;
 		strcpy(tasks[new_tid].fname, name);
 
+		enable_int();
 		return tasks[new_tid].tid;
 	}
 
+	enable_int();
 	return -1;
 }
 
@@ -109,13 +115,6 @@ int need_resched()
 	current->stack = curr_task_sp;
 
 	task_pick_next();
-
-	if(tasks[next_task_tid].state == TASK_INIT)
-	{
-		curr_task_tid = next_task_tid;
-		task_start();
-		/* never reach here */
-	}
 
 	/* run continualy */
 	if (curr_task_tid == next_task_tid)
