@@ -86,18 +86,23 @@ void task_destroy(int tid)
 
 /**
  * @brief Round-Robin scheduler
+ * @return task ID of a ready-to-go task
  */
-void task_sched_RR()
+int task_sched_RR()
 {
-	next_task_tid = curr_task_tid;
+	int next = curr_task_tid;
+
 	/* To find a valid task */
 	do {
-		next_task_tid++;
-	} while (tasks[next_task_tid].tid < 0 && next_task_tid < MAX_TASKS);
-	if(next_task_tid >= MAX_TASKS)
-		next_task_tid = 0;
-	else if(next_task_tid < 0)
-		next_task_tid = 0;
+		next++;
+	} while (tasks[next].tid < 0 && next < MAX_TASKS);
+
+	if(next >= MAX_TASKS)
+		next = 0;
+	else if(next < 0)
+		next = 0;
+
+	return next;
 }
 
 /**
@@ -105,7 +110,7 @@ void task_sched_RR()
  */
 void task_pick_next()
 {
-	task_sched_RR();
+	next_task_tid = task_sched_RR();
 }
 
 /**
