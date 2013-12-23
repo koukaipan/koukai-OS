@@ -1,9 +1,16 @@
+/**
+ * @file    include/x86/gdt.h
+ * @brief   Global description table
+ */
 
 #ifndef __X86_GDT_H__
 #define __X86_GDT_H__
 
-extern void gdt_set_gate(int num, unsigned long base, unsigned long limit, unsigned char access, unsigned char gran);
-extern void gdt_install();
+#define NR_GDT_ENTRIES		10
+
+void gdt_set_gate(int num, unsigned long base, unsigned long limit,
+		unsigned char access, unsigned char gran);
+void gdt_install();
 
 /* Defines a GDT entry */
 struct gdt_entry

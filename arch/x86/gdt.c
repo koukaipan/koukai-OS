@@ -21,7 +21,7 @@
 #include "x86/process.h"
 
 /* Our GDT, with 3 entries, and finally our special GDT pointer */
-struct gdt_entry gdt[10];
+static struct gdt_entry gdt[NR_GDT_ENTRIES];
 
 /**
  * @brief to properly reload the new segment registers
