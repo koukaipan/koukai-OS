@@ -1,3 +1,7 @@
+/**
+ * @file    include/x86/screen.h
+ * @brief   x86 screen operations
+ */
 
 #ifndef __X86_SCREEN_H__
 #define __X86_SCREEN_H__

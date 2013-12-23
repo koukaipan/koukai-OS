@@ -1,3 +1,9 @@
+/**
+ * @file    task.c
+ * @author  Ying-Shiuan Pan
+ * @brief   task manager (arch-independent) and scheduler
+ */
+
 #include "kernel/types.h"
 #include "kernel/task.h"
 #include "lib/string.h"
@@ -103,7 +109,7 @@ void task_pick_next()
 }
 
 /**
- * @brief
+ * @brief Do we need schedule a new task?
  *
  * @retval TRUE we need reschedule a ready task
  * @retval FALSE we don't need.

@@ -1,3 +1,7 @@
+/**
+ * @file    x86/task.c
+ */
+
 #include "x86/task.h"
 #include "kernel/task.h"
 #include "kernel/console.h"

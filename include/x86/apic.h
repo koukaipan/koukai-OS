@@ -1,11 +1,11 @@
 /**
- * @file    apic.h
+ * @file    include/x86/apic.h
  * @author  koukaipan
  * @brief
  */
 
-#ifndef _APIC_H_
-#define _APIC_H_ 
+#ifndef __APIC_H__
+#define __APIC_H__
 
 #include "apic_addr.h"
 
@@ -14,4 +14,4 @@
 *****************************************************************************/
 void apic_init();
 
-#endif
+#endif /* __APIC_H__ */

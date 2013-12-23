@@ -1,14 +1,13 @@
 /**
  * @file    task.h
- * @author
- * @brief
+ * @brief   kernel task structure and operation methods
  */
 
 #ifndef __TASK_H__
 #define __TASK_H__
 
 /****************************************************************************
-*						CONSTANTS
+*	CONSTANTS
 *****************************************************************************/
 #define MAX_TASKS	64
 
@@ -41,6 +40,7 @@ void task_init();
 int task_create(void* stack, char* name, void (*func)(void), int prio);
 void task_destroy(int fn);
 void task_pick_next();
+/* not implement here, arch-dependent function */
 void* task_stack_init(void *start_addr, void *data, void *stack_top);
 int need_resched();
 

@@ -1,11 +1,11 @@
 /**
  * @file	apic_addr.h
  * @author	koukaipan
- * @brief
+ * @brief	APIC specific address
  */
 
-#ifndef _APIC_ADDR_H_
-#define _APIC_ADDR_H_
+#ifndef __APIC_ADDR_H__
+#define __APIC_ADDR_H__
 
 /****************************************************************************
 *	CONSTANTS

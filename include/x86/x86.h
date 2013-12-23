@@ -1,3 +1,6 @@
+/**
+ * @file    include/x86/x86.h
+ */
 
 #ifndef _X86_H_
 #define _X86_H_ 

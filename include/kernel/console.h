@@ -1,3 +1,7 @@
+/**
+ * @file    include/kernel/console.h
+ * @brief   console operations
+ */
 
 #ifndef __KEN_CONSOLE_H__
 #define __KEN_CONSOLE_H__
