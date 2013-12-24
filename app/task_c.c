@@ -1,0 +1,45 @@
+
+#include "kernel/kthread.h"
+#include "kernel/console.h"
+#include "kernel/types.h"
+
+
+int StackC[1024];
+
+void c_delay()
+{
+	int i;
+	for( i = 0 ; i < 0x2ffffff; i ++)
+		;
+}
+
+void task_c()
+{
+    int count = 0;
+	while (1) {
+        settextcolor(0xe,0x1);
+        screen_pos_puts("task_c:", 63, 0);
+        screen_pos_putch(star(count % 4), 70, 0);
+        settextcolor(0xf,0x0);
+        count++;
+		c_delay();
+	}
+}
+
+void task_c_prepare()
+{
+    asm("cli");
+	kt_create(StackC+1024-1, 3, task_c);
+    asm("sti");
+}
+
+void task_c_remove()
+{
+    asm("cli");
+    kt_destroy(3);
+    asm("sti");
+    memset(StackC, 0, sizeof(StackC));
+    settextcolor(0xf,0x1);
+    screen_pos_puts("        ", 63, 0);
+    settextcolor(0xf,0x0);
+}

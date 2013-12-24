@@ -1,0 +1,15 @@
+gdt.c gdt.a isrs.c isrs.a idt.c idt.a (original version)
+
+bkerndev - Bran's Kernel Development Tutorial
+By:   Brandon F. (friesenb@gmail.com)
+Desc: Global Descriptor Table management
+Notes: No warranty expressed or implied. Use at own risk.
+
+Thanks for credits
+*********************************************************
+Base : Brandon F. (friesenb@gmail.com)
+Modifier : 
+  Scott (scottt.tw)
+  Kai-Fong Chou (maple)
+	A simple boot loader & integrate all
+  Fergus Lin

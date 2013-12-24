@@ -1,0 +1,9 @@
+*.o
+*.swp
+*.bin
+*.img
+*.bak
+*.patch
+*.orig
+*.rej
+tags
