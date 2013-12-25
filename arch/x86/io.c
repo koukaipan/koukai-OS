@@ -20,37 +20,35 @@
 
 #include "x86/io.h"
 
-unsigned char inportb (unsigned short _port)
+unsigned char ioread8(unsigned short port)
 {
-    unsigned char rv;
-    __asm__ __volatile__ ("inb %1, %0" : "=a" (rv) : "dN" (_port));
-    return rv;
+	unsigned char v;
+	__asm__ __volatile__ ("inb %1, %0" : "=a" (v) : "dN" (port));
+	return v;
 }
 
-void outportb (unsigned short _port, unsigned char _data)
+unsigned short ioread16(unsigned short port)
 {
-    __asm__ __volatile__ ("outb %1, %0" : : "dN" (_port), "a" (_data));
+	unsigned short v;
+	__asm__ __volatile__ ("inw %1, %0" : "=a" (v) : "d" (port));
+	return v;
 }
 
-unsigned long inportd( unsigned short port ) {
-	unsigned long ret;
-
-	__asm__( "inl %%dx, %%eax" : "=a" (ret) : "d" (port) );
-
-	return ret;
+unsigned int ioread32(unsigned short port)
+{
+	unsigned int v;
+	__asm__ __volatile__ ("inl %1, %0" : "=a" (v) : "d" (port));
+	return v;
 }
 
-unsigned short inportw( unsigned short port ) {
-	unsigned short ret;
-	__asm__( "inw %%dx, %%ax" : "=a" (ret) : "d" (port) );
-
-	return ret;
+void iowrite8(unsigned short port, unsigned char v)
+{
+	__asm__ __volatile__ ("outb %0, %1" : : "a" (v), "dN" (port));
 }
 
-
-void outportd( unsigned short port, unsigned long value ) {
-	__asm__( "outl %%eax, %%dx" : : "a" (value), "d" (port) );
+void iowrite16(unsigned short port, unsigned short v) {
+	__asm__ __volatile__ ("outw %0, %1" : : "a" (v), "d" (port));
 }
-void outportw( unsigned short port, unsigned short value ) {
-	__asm__( "outw %%ax, %%dx" : : "a" (value), "d" (port) );
+void iowrite32(unsigned short port, unsigned int v) {
+	__asm__ __volatile__ ("outl %0, %1" : : "a" (v), "d" (port));
 }

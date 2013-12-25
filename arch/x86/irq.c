@@ -89,16 +89,16 @@ void irq_uninstall_handler(int irq)
  */
 void irq_remap(void)
 {
-    outportb(0x20, 0x11);
-    outportb(0xA0, 0x11);
-    outportb(0x21, 0x20);
-    outportb(0xA1, 0x28);
-    outportb(0x21, 0x04);
-    outportb(0xA1, 0x02);
-    outportb(0x21, 0x01);
-    outportb(0xA1, 0x01);
-    outportb(0x21, 0x0);
-    outportb(0xA1, 0x0);
+    iowrite8(0x20, 0x11);
+    iowrite8(0xA0, 0x11);
+    iowrite8(0x21, 0x20);
+    iowrite8(0xA1, 0x28);
+    iowrite8(0x21, 0x04);
+    iowrite8(0xA1, 0x02);
+    iowrite8(0x21, 0x01);
+    iowrite8(0xA1, 0x01);
+    iowrite8(0x21, 0x0);
+    iowrite8(0xA1, 0x0);
 }
 
 /**
@@ -156,12 +156,12 @@ void irq_handler(struct regs *r)
     *  the slave controller */
     if (r->int_no >= 40)
     {
-        outportb(0xA0, 0x20);
+        iowrite8(0xA0, 0x20);
     }
 
     /* In either case, we need to send an EOI to the master
     *  interrupt controller too */
-    outportb(0x20, 0x20);
+    iowrite8(0x20, 0x20);
 
     /* Find out if we have a custom handler to run for this
     *  IRQ, and then finally, run it */

@@ -24,7 +24,7 @@ int			column = 0;		/* keyrow[column] 将是 keymap 中某一个值 */
 /* interrupt handler */
 void keyboard_handler(struct regs *r)
 {
-	unsigned char scan_code = inportb(KB_DATA);
+	unsigned char scan_code = ioread8(KB_DATA);
 
 	//r = r;
 	

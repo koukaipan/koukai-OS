@@ -27,21 +27,21 @@ int findPCI( void ) {
     unsigned int temp;
 
     /* Check if configuraton type 1 works */
-    outportb( 0xCFB, 0x01 );
-    temp = inportd( 0xCF8 );
-    outportd( 0xCF8, 0x80000000 );
-    if ( inportd( 0xCF8 ) == 0x80000000 ) {
-	outportd( 0xCF8, temp );
+    iowrite8( 0xCFB, 0x01 );
+    temp = ioread32( 0xCF8 );
+    iowrite32( 0xCF8, 0x80000000 );
+    if ( ioread32( 0xCF8 ) == 0x80000000 ) {
+	iowrite32( 0xCF8, temp );
 	PCIType = 1;
 	return PCI_PRESENT;
     }
-    outportd( 0xCF8, temp );
+    iowrite32( 0xCF8, temp );
 
     /* Check if configuration type 2 works */
-    outportb( 0xCFB, 0x00 );
-    outportb( 0xCF8, 0x00 );
-    outportb( 0xCFA, 0x00 );
-    if ( inportb( 0xCF8 ) == 0x00 && inportb( 0xCFA ) == 0x00 ) {
+    iowrite8( 0xCFB, 0x00 );
+    iowrite8( 0xCF8, 0x00 );
+    iowrite8( 0xCFA, 0x00 );
+    if ( ioread8( 0xCF8 ) == 0x00 && ioread8( 0xCFA ) == 0x00 ) {
 	PCIType = 2;
 	return PCI_PRESENT;
     }
@@ -54,17 +54,17 @@ unsigned long ReadPCIConfig( int bus, int device, int function, int offset, int 
 
     if ( size == 2 || size == 4 || size == 1 ) {
 	 if ( PCIType & 1 ) {
-	    outportd( 0xCF8, 0x80000000 | ( bus << 16 ) | ( device << 11 )
+	    iowrite32( 0xCF8, 0x80000000 | ( bus << 16 ) | ( device << 11 )
 		| ( function << 8 ) | ( offset & ~3 ) );
 	    switch ( size ) {
 		case 1:
-		    value = inportb( 0xCFC + ( offset & 3 ) );
+		    value = ioread8( 0xCFC + ( offset & 3 ) );
 		    break;
 		case 2:
-		    value = inportw( 0xCFC + ( offset & 2 ) );
+		    value = ioread16( 0xCFC + ( offset & 2 ) );
 		    break;
 		case 4:
-		    value = inportd( 0xCFC );
+		    value = ioread32( 0xCFC );
 		    break;
 		default:
 		    break;
@@ -84,17 +84,17 @@ unsigned long WritePCIConfig( int bus, int device, int function, int offset, int
 
     if ( size == 2 || size == 4 || size == 1 ) {
 	if ( PCIType & 1 ) {
-	    outportd( 0xCF8, 0x80000000 | ( bus << 16 ) | ( device << 11 )
+	    iowrite32( 0xCF8, 0x80000000 | ( bus << 16 ) | ( device << 11 )
 		| ( function << 8 ) | ( offset & ~3 ) );
 	    switch ( size ) {
 		case 1:
-		    outportb( 0xCFC + ( offset & 3 ), value );
+		    iowrite8( 0xCFC + ( offset & 3 ), value );
 		    break;
 		case 2:
-		    outportw( 0xCFC + ( offset & 2 ), value );
+		    iowrite16( 0xCFC + ( offset & 2 ), value );
 		    break;
 		case 4:
-		    outportd( 0xCFC, value );
+		    iowrite32( 0xCFC, value );
 		    break;
 		default:
 		    return -1;

@@ -2,14 +2,12 @@
 #ifndef __X86_IO_H__
 #define __X86_IO_H__
 
-unsigned char inportb (unsigned short _port);
-void outportb (unsigned short _port, unsigned char _data);
+unsigned char ioread8(unsigned short port);
+unsigned short ioread16(unsigned short port);
+unsigned int ioread32( unsigned short port );
 
-/* double word */
-unsigned long inportd (unsigned short _port);
-unsigned short inportw( unsigned short port );
-
-void outportd( unsigned short port, unsigned long value );
-void outportw( unsigned short port, unsigned short value );
+void iowrite8(unsigned short port, unsigned char v);
+void iowrite16(unsigned short port, unsigned short v);
+void iowrite32(unsigned short port, unsigned int v);
 
 #endif

@@ -68,10 +68,10 @@ void set_cursor(void)
     *  learn more, you should look up some VGA specific
     *  programming documents. A great start to graphics:
     *  http://www.brackeen.com/home/vga */
-    outportb(0x3D4, 14);
-    outportb(0x3D5, temp >> 8);
-    outportb(0x3D4, 15);
-    outportb(0x3D5, temp);
+    iowrite8(0x3D4, 14);
+    iowrite8(0x3D5, temp >> 8);
+    iowrite8(0x3D4, 15);
+    iowrite8(0x3D5, temp);
 }
 
 
