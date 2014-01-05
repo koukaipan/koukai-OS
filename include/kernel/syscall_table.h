@@ -1,7 +1,7 @@
 #ifndef __SYSCALL_TABLE_H__
 #define __SYSCALL_TABLE_H__
 
-#define NR_SYS_CALL 5
+#include "kernel/unistd.h"
 
 unsigned int sys_get_ticks();
 

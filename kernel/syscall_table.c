@@ -1,6 +1,6 @@
 #include "kernel/syscall_table.h"
 
-void* sys_call_table[NR_SYS_CALL] = {
+void* sys_call_table[NR_SYSCALLS] = {
 	[0] = sys_get_ticks,
 	0
 };
