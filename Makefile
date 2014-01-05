@@ -1,13 +1,15 @@
+include arch/x86/Config.mk
+
 #######################################################################
 # compiler setting
 #######################################################################
 CC = gcc
 LD = ld
 OBJCOPY = objcopy
-INCLUDE_DIR = -I. -I./include
+INCLUDE_DIR += -I. -I./include $(ARCH_INCLUDES)
 
-CFLAGS += -m32 -Wall -ffreestanding -nostdlib $(INCLUDE_DIR)
-LDFLAGS += -m elf_i386 -nostdlib
+CFLAGS += -Werror -ffreestanding -nostdlib $(INCLUDE_DIR) $(ARCH_CFLAGS)
+LDFLAGS += -nostdlib $(ARCH_LDFLAGS)
 
 APP_OBJS = \
 	app/shell.o \
@@ -21,29 +23,10 @@ KERN_OBJS = \
 	kernel/syscall_table.o \
 	kernel/task.o
 
-X86_OBJS = \
-	arch/x86/idt.o \
-	arch/x86/gdt.o \
-	arch/x86/isr.o \
-	arch/x86/isr_asm.o \
-	arch/x86/irq.o \
-	arch/x86/irq_asm.o \
-	arch/x86/timer.o \
-	arch/x86/screen.o \
-	arch/x86/io.o \
-	arch/x86/init.o \
-	arch/x86/pci.o \
-	arch/x86/apic.o \
-	arch/x86/keyboard.o \
-	arch/x86/task.o \
-	arch/x86/syscall.o \
-	arch/x86/ctx_sw.o \
-	arch/x86/x86.o
-	
 LIB_OBJS = \
 	lib/string.o
 
-ALL_OBJS =  $(KERN_OBJS) $(LIB_OBJS) $(X86_OBJS) $(APP_OBJS)
+ALL_OBJS =  $(KERN_OBJS) $(LIB_OBJS) $(ARCH_OBJS) $(APP_OBJS)
 
 #######################################################################
 # common modules
@@ -51,14 +34,14 @@ ALL_OBJS =  $(KERN_OBJS) $(LIB_OBJS) $(X86_OBJS) $(APP_OBJS)
 .PHONY: tags all
 .SUFFIXES:.asm .bin .S
 
-TARGET = koukai-OS.img
+IMAGE = koukai-OS.img
 
-all: $(TARGET) tags
+all: $(IMAGE) tags
 
-$(TARGET):boot/bootsect.bin kernel.bin
-	dd if=/dev/zero of=$(TARGET) bs=512 count=2880
-	dd if=boot/bootsect.bin of=$(TARGET) bs=512 seek=0 conv=notrunc
-	dd if=kernel.bin of=$(TARGET) bs=512 seek=1 conv=notrunc
+$(IMAGE):boot/bootsect.bin kernel.bin
+	dd if=/dev/zero of=$(IMAGE) bs=512 count=2880
+	dd if=boot/bootsect.bin of=$(IMAGE) bs=512 seek=0 conv=notrunc
+	dd if=kernel.bin of=$(IMAGE) bs=512 seek=1 conv=notrunc
 
 %.bin:%.asm
 	nasm -f bin $< -o $@
@@ -88,6 +71,6 @@ clean:
 tags:
 	ctags -R . 
 
-run: $(TARGET)
+run: $(IMAGE)
 	qemu -fda $< -boot a
 
