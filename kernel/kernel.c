@@ -46,7 +46,7 @@ void c_main()
 	init_tid = task_create(init_stack+1024-1, "init", init, 0);
 	/* nothing to do */
 	while(1)
-		timer_wait(20000);
+		default_idle();
 }
 
 void start_kernel()
@@ -59,5 +59,5 @@ void init()
 	shell_tid = task_create(shell_stack+1024-1, "shell", shell_main, 0);
 	/* nothing to do */
 	while(1)
-		timer_wait(20000);
+		default_idle();
 }
